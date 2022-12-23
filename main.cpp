@@ -1,14 +1,11 @@
-#include <iostream>
-#include <time.h>
 #include <ncurses.h>
 #include <future>
 
 bool now_playing = true;
 int i = 0;
-char i_char[12];
 
 void loop_test1();
-void game_loop();
+void loop();
 void draw();
 
 int main() {
@@ -17,12 +14,12 @@ int main() {
 
 void loop_test1()
 {
-    initscr();
+    initscr(); //start ncurses window
     noecho(); //キーが入力されても表示しない
     curs_set(1);//カーソルを非表示
 
-    //ゲームスレッド開始
-    auto th_game = std::thread([] {game_loop();});
+    //Thread start
+    auto th_loop = std::thread([] {loop();});
 
     while(now_playing) {
         char ch = getch();
@@ -35,11 +32,11 @@ void loop_test1()
                 break;
         }
     }
-    th_game.join();
-    endwin();
+    th_loop.join();
+    endwin(); // end ncurses window
 }
 
-void game_loop()
+void loop()
 {
     while (now_playing)
     {
